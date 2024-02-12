@@ -6,4 +6,8 @@ export default () => ({
     password: process.env.TYPEORM_PASSWORD,
     port: parseInt(process.env.TYPEORM_PORT, 10) || 5432,
   },
+  coinstats: {
+    url: process.env.COINSTATS_URL,
+    apiKey: process.env.COINSTATS_API_KEY,
+  },
 });
