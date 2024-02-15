@@ -1,4 +1,5 @@
 export default () => ({
+  corsOrigin: ['http://localhost:3000'],
   database: {
     host: process.env.TYPEORM_HOST,
     user: process.env.TYPEORM_USERNAME || 'postgres',
