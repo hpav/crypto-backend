@@ -1,15 +1,18 @@
 import { Injectable } from '@nestjs/common';
-import { CoinstatsChain } from '../coinstats/coinstats-chain.entity';
+import { ChainWithCoins } from './wallet.dto';
 import { CoinstatsService } from '../coinstats/coinstats.service';
-import { CoinstatsCoin } from '../coinstats/coinstats-coin.entity';
-
-export interface ChainWithCoins extends CoinstatsChain {
-  coins: CoinstatsCoin[];
-}
+import { WalletAddInput } from './wallet.input';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Wallet } from './wallet.entity';
 
 @Injectable()
 export class WalletService {
-  constructor(private coinstatsService: CoinstatsService) {}
+  constructor(
+    @InjectRepository(Wallet)
+    private walletRepository: Repository<Wallet>,
+    private coinstatsService: CoinstatsService,
+  ) {}
 
   async getOverview(address: string): Promise<ChainWithCoins[]> {
     const coinsOverview = await this.coinstatsService.getCoinsOverview(address);
@@ -25,5 +28,13 @@ export class WalletService {
           }),
       }))
       .filter((coinsWithCoins: ChainWithCoins) => coinsWithCoins.coins.length);
+  }
+
+  async addWallet(walletAddInput: WalletAddInput): Promise<void> {
+    const { address, connectionIds } = walletAddInput;
+
+    for (const connectionId of connectionIds) {
+      await this.walletRepository.save({ address, connectionId });
+    }
   }
 }

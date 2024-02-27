@@ -23,7 +23,7 @@ export class CoinstatsService {
   }
 
   async getCoinsOverview(address: string): Promise<CoinOverview[]> {
-    const chains: CoinstatsChain[] = await this.chainRepository.find();
+    const chains: CoinstatsChain[] = await this.getChains();
     const coins: CoinstatsCoin[] = await this.coinRepository.find();
     let coinstatsAmount: CoinstatsAmount[] = [];
 
