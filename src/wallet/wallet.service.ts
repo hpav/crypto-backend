@@ -22,7 +22,7 @@ export class WalletService {
       .map((chain) => ({
         ...chain,
         coins: coinsOverview
-          .filter((item) => item.chain.id === chain.id)
+          .filter((item) => item.chain.connectionId === chain.connectionId)
           .map((item) => {
             return item.coin;
           }),

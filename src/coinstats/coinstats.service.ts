@@ -4,22 +4,27 @@ import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 
-import { CoinstatsChain } from './coinstats-chain.entity';
+import { CoinstatsChain } from './coinstats.dto';
 import { CoinOverview, CoinstatsAmount, Method } from './coinstats.dto';
 import { CoinstatsCoin } from './coinstats-coin.entity';
 
 @Injectable()
 export class CoinstatsService {
   constructor(
-    @InjectRepository(CoinstatsChain)
-    private chainRepository: Repository<CoinstatsChain>,
     @InjectRepository(CoinstatsCoin)
     private coinRepository: Repository<CoinstatsCoin>,
     private configService: ConfigService,
   ) {}
 
   async getChains(): Promise<CoinstatsChain[]> {
-    return await this.chainRepository.find();
+    const blockchains = await this.sendRequest(`wallet/blockchains`);
+
+    return blockchains.map((blockchain) => ({
+      connectionId: blockchain.connectionId,
+      name: blockchain.name,
+      icon: blockchain.icon?.replace(`.png`, `_dark.png`),
+      code: blockchain.chain,
+    }));
   }
 
   async getCoinsOverview(address: string): Promise<CoinOverview[]> {

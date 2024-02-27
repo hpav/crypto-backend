@@ -1,7 +1,13 @@
 import { CoinstatsCoin } from './coinstats-coin.entity';
-import { CoinstatsChain } from './coinstats-chain.entity';
 
 export type Method = 'get' | 'post' | 'patch';
+
+export interface CoinstatsChain {
+  connectionId: string;
+  name: string;
+  icon: string;
+  code: string;
+}
 
 export interface CoinstatsAmount {
   coinId: string;
